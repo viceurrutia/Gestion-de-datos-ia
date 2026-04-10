@@ -16,8 +16,6 @@ Clonar el repositorio:
 Bash
 git clone https://github.com/usuario/google-trends-ia.git
 cd google-trends-ia
-
-
 Configurar variables de entorno: Crear un archivo .env con el PROJECT_ID y la ruta a las GOOGLE_APPLICATION_CREDENTIALS.
 Ejecutar Pipeline Inicial: Correr el script main.py para crear las vistas filtradas en la Capa Silver.
 5. Estructura del Repositorio
