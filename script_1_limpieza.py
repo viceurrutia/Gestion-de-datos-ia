@@ -15,7 +15,6 @@ try:
     # 1. FORZAR LA LECTURA DEL ARCHIVO JSON DIRECTAMENTE
     credenciales = service_account.Credentials.from_service_account_file('credenciales.json')
     
-    # ¡AQUÍ ESTÁ EL CAMBIO! Usamos el ID exacto de tu archivo JSON
     project_id = 'lyrical-line-491314-v5'
     
     # Conectamos inyectando la llave
