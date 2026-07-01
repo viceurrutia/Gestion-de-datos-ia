@@ -14,7 +14,7 @@ query = "SELECT * FROM international_top_terms_cl"
 df = pd.read_sql(query, engine)
 
 # 2. PREPROCESAMIENTO Y CREACIÓN DE LA VARIABLE OBJETIVO (Fase 2)
-# El profesor pidió clasificación. Si el score es mayor a 75, es "Alta Tendencia" (1), sino (0).
+# Si el score es mayor a 75, es "Alta Tendencia" (1), sino (0).
 df['alta_tendencia'] = np.where(df['score'] > 75, 1, 0)
 
 # Ingeniería de características (Features)
@@ -24,7 +24,7 @@ df['week'] = pd.to_datetime(df['week'])
 df['mes'] = df['week'].dt.month
 df['largo_termino'] = df['term'].apply(len) # Qué tan larga es la palabra buscada
 
-# 3. ANÁLISIS EXPLORATORIO (EDA - Requisito de la rúbrica)
+# 3. ANÁLISIS EXPLORATORIO 
 print("\nGenerando Matriz de Correlación...")
 columnas_numericas = ['rank', 'mes', 'largo_termino', 'alta_tendencia']
 plt.figure(figsize=(8, 6))
@@ -33,7 +33,7 @@ plt.title("Matriz de Correlación de Variables")
 plt.savefig('matriz_correlacion.png') # Guarda el gráfico para el informe
 plt.close()
 
-# 4. ENTRENAMIENTO DEL MODELO (Fase 3)
+# 4. ENTRENAMIENTO DEL MODELO 
 X = df[['rank', 'mes', 'largo_termino']] # Variables predictoras
 y = df['alta_tendencia']                 # Lo que queremos adivinar
 
