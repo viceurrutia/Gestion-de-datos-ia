@@ -1,0 +1,48 @@
+"""
+Fase 3: Evaluación del Modelo y Métricas
+Calcula Accuracy, Recall, F1-Score, Curva ROC y Gini. Muestra los gráficos obligatorios.
+"""
+
+import matplotlib.pyplot as plt
+import joblib
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_score, recall_score, f1_score, roc_curve, auc
+
+# Cargar los resultados guardados por el script de entrenamiento
+y_test, y_pred, y_prob = joblib.load('data/resultados_entrenamiento.pkl')
+
+print("\n==================================================")
+print("📝 VALORES EXACTOS PARA COMPLETAR TU INFORME:")
+print("==================================================")
+print(f"• Accuracy (Exactitud): {accuracy_score(y_test, y_pred) * 100:.2f}%")
+print(f"• Recall (Sensibilidad): {recall_score(y_test, y_pred) * 100:.2f}%")
+print(f"• F1-Score: {f1_score(y_test, y_pred) * 100:.2f}%")
+
+# Calcular Curva ROC e Índice Gini
+fpr, tpr, umbrales = roc_curve(y_test, y_prob)
+roc_auc = auc(fpr, tpr)
+gini = (2 * roc_auc) - 1
+
+print(f"• Área bajo la curva (AUC): {roc_auc:.3f}")
+print(f"• Coeficiente de Gini: {gini:.3f}")
+print("==================================================")
+
+# --- GENERACIÓN DE FOTO 2: Matriz de Confusión ---
+cm = confusion_matrix(y_test, y_pred)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=['Baja', 'Alta'])
+disp.plot(cmap='Blues')
+plt.title('Matriz de Confusión')
+plt.show()
+# -> SÁQUENLE PANTALLAZO A ESTA MATRIZ PARA EL WORD <-
+
+# --- GENERACIÓN DE FOTO 3: Curva ROC ---
+plt.figure(figsize=(8, 6))
+plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'Curva ROC (AUC = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('Tasa de Falsos Positivos')
+plt.ylabel('Tasa de Verdaderos Positivos')
+plt.title(f'Curva ROC (Gini = {gini:.2f})')
+plt.legend(loc="lower right")
+plt.show()
+# -> SÁQUENLE PANTALLAZO A ESTE GRÁFICO PARA EL WORD <-
