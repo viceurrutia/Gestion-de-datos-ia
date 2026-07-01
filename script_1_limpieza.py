@@ -24,10 +24,10 @@ try:
     
     # Consulta SQL
     query = """
-        SELECT score, rank, country_code, region_code, term, refresh_date, country_name, region_name, week 
+        SELECT score, rank, country_code, region_code, term, refresh_date, country_name, region_name, week
         FROM `bigquery-public-data.google_trends.international_top_terms`
         WHERE country_name = 'Chile'
-        LIMIT 5000
+        AND week >= '2025-01-01'
     """
     
     print("Descargando datos desde BigQuery...")
