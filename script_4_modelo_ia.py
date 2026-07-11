@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,9 +8,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, roc_curve
 
-# 1. CONEXIÓN A LA BASE DE DATOS DOCKER (Capa Gold)
+# 1. CONEXIÓN A LA BASE DE DATOS (Capa Gold)
 print("Conectando a PostgreSQL...")
-engine = create_engine('postgresql://admin:adminpassword@localhost:5432/google_trends_db')
+db_url = os.environ.get("DATABASE_URL", "postgresql://admin:adminpassword@localhost:5432/google_trends_db")
+
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+engine = create_engine(db_url)
 query = "SELECT * FROM international_top_terms_cl"
 df = pd.read_sql(query, engine)
 
