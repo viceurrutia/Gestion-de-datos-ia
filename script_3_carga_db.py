@@ -1,12 +1,17 @@
+import os
 import pandas as pd
 from sqlalchemy import create_engine
 
 print("--- ETAPA 3: CARGA A POSTGRESQL ---")
 df = pd.read_csv('data/validated/tendencias_validated.csv')
 
-# 1. Conexión a la Base de Datos PostgreSQL local (Docker)
-# Formato: postgresql://usuario:contraseña@host:puerto/nombre_bd
-engine = create_engine('postgresql://admin:adminpassword@localhost:5432/google_trends_db')
+# 1. Conexión a la Base de Datos PostgreSQL (Local o Render)
+db_url = os.environ.get("DATABASE_URL", "postgresql://admin:adminpassword@localhost:5432/google_trends_db")
+
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+engine = create_engine(db_url)
 
 # 2. Inserción controlada
 try:
