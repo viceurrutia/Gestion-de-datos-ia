@@ -1,4 +1,5 @@
 import os
+import time
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,11 +25,9 @@ df = pd.read_sql(query, engine)
 df['alta_tendencia'] = np.where(df['score'] > 75, 1, 0)
 
 # Ingeniería de características (Features)
-# No podemos usar el 'score' para predecir 'alta_tendencia' porque sería trampa (Data Leakage).
-# Usaremos el 'rank' y extraeremos el mes de la fecha para ver si hay estacionalidad.
 df['week'] = pd.to_datetime(df['week'])
 df['mes'] = df['week'].dt.month
-df['largo_termino'] = df['term'].apply(len) # Qué tan larga es la palabra buscada
+df['largo_termino'] = df['term'].apply(len) 
 
 # 3. ANÁLISIS EXPLORATORIO 
 print("\nGenerando Matriz de Correlación...")
@@ -36,12 +35,12 @@ columnas_numericas = ['rank', 'mes', 'largo_termino', 'alta_tendencia']
 plt.figure(figsize=(8, 6))
 sns.heatmap(df[columnas_numericas].corr(), annot=True, cmap='coolwarm', fmt=".2f")
 plt.title("Matriz de Correlación de Variables")
-plt.savefig('matriz_correlacion.png') # Guarda el gráfico para el informe
+plt.savefig('matriz_correlacion.png') 
 plt.close()
 
 # 4. ENTRENAMIENTO DEL MODELO 
 X = df[['rank', 'mes', 'largo_termino']] # Variables predictoras
-y = df['alta_tendencia']                 # Lo que queremos adivinar
+y = df['alta_tendencia']                 # Variable objetivo
 
 # Dividir en datos de entrenamiento (80%) y prueba (20%)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -52,7 +51,7 @@ modelo.fit(X_train, y_train)
 
 # 5. PREDICCIONES Y MÉTRICAS DE DESEMPEÑO
 y_pred = modelo.predict(X_test)
-y_prob = modelo.predict_proba(X_test)[:, 1] # Probabilidades para la Curva ROC
+y_prob = modelo.predict_proba(X_test)[:, 1] 
 
 print("\n--- MATRIZ DE CONFUSIÓN ---")
 print(confusion_matrix(y_test, y_pred))
@@ -67,7 +66,7 @@ print(f"\n--- MÉTRICAS AVANZADAS ---")
 print(f"AUC (Área bajo la curva ROC): {auc:.3f}")
 print(f"Coeficiente de GINI: {gini:.3f}")
 
-# Graficar Curva ROC (Requisito para el informe)
+# Graficar Curva ROC 
 fpr, tpr, _ = roc_curve(y_test, y_prob)
 plt.figure(figsize=(8, 6))
 plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'Curva ROC (AUC = {auc:.2f})')
@@ -80,3 +79,8 @@ plt.savefig('curva_roc.png')
 plt.close()
 
 print("\n¡Proceso de IA finalizado! Gráficos guardados en tu carpeta.")
+
+# 6. TRUCO PARA RENDER: Mantener el contenedor encendido
+print("Manteniendo el servicio web activo para Render...")
+while True:
+    time.sleep(3600) # Duerme por una hora, infinito.
